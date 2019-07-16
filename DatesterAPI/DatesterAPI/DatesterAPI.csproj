@@ -13,7 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Datester.Data\Datester.Data.csproj" />
-    <ProjectReference Include="..\Datester.Models\Datester.Models.csproj" />
+    <ProjectReference Include="..\Datester.Models\Datester.Data.Models.csproj" />
     <ProjectReference Include="..\Datester.Services\Datester.Services.csproj" />
   </ItemGroup>
 

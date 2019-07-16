@@ -36,9 +36,9 @@ namespace DatesterAPI.Controllers
         {
             ApplicationUser newUser = mapper.Map<ApplicationUser>(user);
 
-            await userManager.AddPasswordAsync(newUser, user.Password);
+            var result = await userManager.CreateAsync(newUser, user.Password);
 
-            return Task.CompletedTask;
+            return this.Ok(result);
         }
     }
 }

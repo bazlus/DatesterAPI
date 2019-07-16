@@ -8,7 +8,13 @@
     {
         public ApplicationMappingsProfile()
         {
-            CreateMap<UserRegistrationInputModel, ApplicationUser>().ReverseMap();
+            CreateMap<UserRegistrationInputModel, ApplicationUser>()
+                .ForMember(dest => dest.UserName, opt => opt.MapFrom(source => GetUsername(source.Email)));
+        }
+
+        private string GetUsername(string email)
+        {
+            return email.Replace("@", ".").Replace(".", "-");
         }
     }
 }

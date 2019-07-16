@@ -1,8 +1,8 @@
-﻿
-namespace DatesterAPI.InputModels
+﻿namespace DatesterAPI.InputModels
 {
     using System;
     using System.ComponentModel.DataAnnotations;
+    using Datester.Data.Models;
     using Datester.Services.Validation_Attributes;
 
     public class UserRegistrationInputModel
@@ -26,5 +26,7 @@ namespace DatesterAPI.InputModels
 
         [PasswordMatch]
         public string ConfirmPassword { get; set; }
+
+        public Gender Gender { get; set; }
     }
 }

@@ -7,9 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DatesterAPI", "DatesterAPI\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Datester.Data", "Datester.Data\Datester.Data.csproj", "{D837D196-2FE9-4855-8066-AA5DC487F2FB}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Datester.Models", "Datester.Models\Datester.Models.csproj", "{0AF05F20-17B0-45AD-9C78-239B02A4AFFB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Datester.Data.Models", "Datester.Models\Datester.Data.Models.csproj", "{0AF05F20-17B0-45AD-9C78-239B02A4AFFB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Datester.Services", "Datester.Services\Datester.Services.csproj", "{63757F0B-7F91-4808-96C9-17ABD6637338}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Datester.Services", "Datester.Services\Datester.Services.csproj", "{63757F0B-7F91-4808-96C9-17ABD6637338}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
