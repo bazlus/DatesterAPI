@@ -26,6 +26,7 @@
         [InverseProperty("UserOne")]
         public ICollection<UserOperations> UserOperationses { get; set; }
 
+        public string Hobbies { get; set; }
 
         public ApplicationUser()
         {

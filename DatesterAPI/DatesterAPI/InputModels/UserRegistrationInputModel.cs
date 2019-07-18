@@ -27,6 +27,9 @@
         [PasswordMatch]
         public string ConfirmPassword { get; set; }
 
+        [Required]
         public Gender Gender { get; set; }
+
+        public string[] Hobbies { get; set; }
     }
 }
