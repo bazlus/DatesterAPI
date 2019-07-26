@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Datester.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,33 +13,40 @@ namespace DatesterAPI.Controllers
     using InputModels;
     using Microsoft.AspNetCore.Identity;
 
-    [Route("api/[controller]")]
-    [ApiController]
-    public class UsersController : ControllerBase
+
+    public class UsersController : ApiController
     {
-        private readonly UserManager<ApplicationUser> userManager;
-        private readonly SignInManager<ApplicationUser> signInManager;
+        private readonly IUserService userService;
         private readonly IMapper mapper;
 
-        public UsersController(
-            UserManager<ApplicationUser> userManager,
-            SignInManager<ApplicationUser> signInManager,
-            IMapper mapper)
+        public UsersController(IUserService userService,
+                                IMapper mapper)
         {
-            this.userManager = userManager;
-            this.signInManager = signInManager;
+            this.userService = userService;
             this.mapper = mapper;
         }
 
         [HttpPost]
-        [Route("register")]
-        public async Task<object> Register(UserRegistrationInputModel user)
+        [Route("Register")]
+        public async Task<ActionResult> Register(UserRegistrationInputModel userInputModel)
         {
-            ApplicationUser newUser = mapper.Map<ApplicationUser>(user);
+            ApplicationUser user = mapper.Map<ApplicationUser>(userInputModel);
+            return this.Ok(await this.userService.RegisterUser(user, userInputModel.Password));
+        }
 
-            var result = await userManager.CreateAsync(newUser, user.Password);
-
-            return this.Ok(result);
+        [HttpPost]
+        [Route("Login")]
+        public async Task<ActionResult> Login(UserLoginInputModel userLoginInput)
+        {
+            try
+            {
+               var tokenResult = await userService.SignInUser(userLoginInput.Email, userLoginInput.Password);
+               return this.Ok(new {tokenResult});
+            }
+            catch (InvalidOperationException ex)
+            {
+                return this.BadRequest(ex);
+            }
         }
     }
 }

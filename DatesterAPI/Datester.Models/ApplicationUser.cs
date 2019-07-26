@@ -6,7 +6,7 @@
     using Datester.Models;
     using Microsoft.AspNetCore.Identity;
 
-    public class ApplicationUser : IdentityUser
+    public class ApplicationUser : IdentityUser<string>
     {
         [Required]
         public string FirstName { get; set; }
