@@ -24,14 +24,17 @@
         public ICollection<UsersDates> Dates { get; set; }
 
         [InverseProperty("UserOne")]
-        public ICollection<UserOperations> UserOperationses { get; set; }
+        public ICollection<UserOperations> UserOperations { get; set; }
 
         public string Hobbies { get; set; }
 
+        public ICollection<UsersPhotos> Photos { get; set; }
+
         public ApplicationUser()
         {
-            this.UserOperationses = new HashSet<UserOperations>();
+            this.UserOperations = new HashSet<UserOperations>();
             this.Dates = new HashSet<UsersDates>();
+            this.Photos = new HashSet<UsersPhotos>();
         }
     }
 }

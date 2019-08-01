@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Datester.Models
+﻿namespace Datester.Data.Models
 {
-    using Data.Models;
-    using Enums;
+    using Datester.Models.Enums;
 
     public class UserOperations
     {

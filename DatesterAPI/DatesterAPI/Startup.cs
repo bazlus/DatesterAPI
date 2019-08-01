@@ -3,6 +3,7 @@
     using AutoMapper;
     using Datester.Data;
     using Datester.Data.Models;
+    using Datester.Services;
     using Datester.Services.AutoMapper;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
@@ -18,7 +19,6 @@
             Configuration = configuration;
         }
 
-        readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
         public IConfiguration Configuration { get; }
 
@@ -32,15 +32,20 @@
             IMapper mapper = mappingConfig.CreateMapper();
             services.AddSingleton(mapper);
 
-            services.AddCors();
+            services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(opt => opt.WithOrigins("http://localhost:4200").AllowAnyHeader().AllowAnyMethod());
+            });
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            services.AddTransient<IUserService, UserService>();
+
+         
 
             services.AddDbContext<DatesterDbContext>(options =>
             {
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             });
-
             services.AddDefaultIdentity<ApplicationUser>(options =>
                 {
                     options.Password.RequireDigit = false;
@@ -50,6 +55,8 @@
                     options.Password.RequiredLength = 6;
                 })
                 .AddEntityFrameworkStores<DatesterDbContext>();
+
+            services.AddMvc(options => { options.InputFormatters.Insert(0, new BinaryInputFormatter()); }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
