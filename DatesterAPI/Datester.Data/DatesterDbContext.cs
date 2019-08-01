@@ -6,7 +6,7 @@
     using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
     using Models;
 
-    public class DatesterDbContext : IdentityDbContext<ApplicationUser>
+    public class DatesterDbContext : IdentityDbContext<ApplicationUser, IdentityRole, string>
     {
         public DatesterDbContext(DbContextOptions options)
             :base(options)
