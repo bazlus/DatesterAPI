@@ -1,29 +1,24 @@
-﻿using Microsoft.AspNetCore.Mvc;
-
-using System;
-using System.Threading.Tasks;
-
-namespace DatesterAPI.Controllers
+﻿namespace DatesterAPI.Controllers
 {
     using AutoMapper;
-
+    using Datester.Data.Models;
+    using Datester.Services;
     using InputModels;
-
-    using Microsoft.AspNetCore.Identity;
+    using Microsoft.AspNetCore.Mvc;
+    using System;
+    using System.Threading.Tasks;
 
 
     public class UsersController : ApiController
     {
         private readonly IUserService userService;
         private readonly IMapper mapper;
-        private readonly IUserService userService;
 
         public UsersController(IUserService userService,
                                 IMapper mapper)
         {
             this.userService = userService;
             this.mapper = mapper;
-            this.userService = userService;
         }
 
         [HttpPost]

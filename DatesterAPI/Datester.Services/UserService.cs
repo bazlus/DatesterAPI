@@ -16,19 +16,23 @@ namespace Datester.Services
     using Microsoft.AspNetCore.Mvc;
 
     public class UserService : IUserService
-<<<<<<< HEAD
     {
         private readonly UserManager<ApplicationUser> userManager;
         private readonly SignInManager<ApplicationUser> signInManager;
         private readonly DatesterDbContext dbContext;
+        private readonly IOptions<JwtSettings> jwtSettings;
 
         public UserService(UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
-            DatesterDbContext dbContext)
+            DatesterDbContext dbContext,
+            IOptions<JwtSettings> jwtSettings
+            )
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
             this.dbContext = dbContext;
+            this.jwtSettings = jwtSettings;
+
         }
 
 
@@ -37,21 +41,6 @@ namespace Datester.Services
             var user = await userManager.GetUserAsync(userClaims);
             user.Photos.Add(new UsersPhotos() {Photo = photo});
             return await dbContext.SaveChangesAsync();
-=======
-
-    {
-        private readonly UserManager<ApplicationUser> userManager;
-        private readonly SignInManager<ApplicationUser> signInManager;
-        private readonly IOptions<JwtSettings> jwtSettings;
-
-        public UserService(UserManager<ApplicationUser> userManager,
-            SignInManager<ApplicationUser> signInManager,
-            IOptions<JwtSettings> jwtSettings
-            )
-        {
-            this.userManager = userManager;
-            this.signInManager = signInManager;
-            this.jwtSettings = jwtSettings;
         }
 
         public async Task<IdentityResult> RegisterUser(ApplicationUser user, string password)
@@ -99,7 +88,6 @@ namespace Datester.Services
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
->>>>>>> 4a6d825253f225505b3c02116c9f96ffe7d94178
         }
     }
 }
