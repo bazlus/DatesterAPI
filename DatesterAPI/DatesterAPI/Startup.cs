@@ -1,5 +1,6 @@
 ﻿namespace DatesterAPI
 {
+    using System.Reflection;
     using System.Text;
     using AutoMapper;
     using Configuration;
@@ -15,6 +16,7 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.IdentityModel.Tokens;
+    using ViewModels;
 
     public class Startup
     {
@@ -27,29 +29,7 @@
 
         public void ConfigureServices(IServiceCollection services)
         {
-            var jwtSettingsSection = Configuration.GetSection("JwtSettings");
-            services.Configure<JwtSettings>(jwtSettingsSection);
-
-            var jwtSettings = jwtSettingsSection.Get<JwtSettings>();
-            var key = Encoding.UTF8.GetBytes(jwtSettings.Secret);
-
-            services.AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(options =>
-            {
-                options.RequireHttpsMetadata = false;
-                options.SaveToken = true;
-                options.TokenValidationParameters = new TokenValidationParameters()
-                {
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(key),
-                    ValidateIssuer = false,
-                    ValidateAudience = false
-                };
-            });
+            ConfigureJwt(services);
 
             var mappingConfig = new MapperConfiguration(mc =>
             {
@@ -65,9 +45,6 @@
                 options.AddDefaultPolicy(opt => opt.WithOrigins("http://localhost:4200").AllowAnyHeader().AllowAnyMethod());
             });
 
-
-
-         
             services.AddCors();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
@@ -87,6 +64,7 @@
 
             services.AddMvc(options => { options.InputFormatters.Insert(0, new BinaryInputFormatter()); }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
+
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
@@ -108,5 +86,33 @@
             app.UseHttpsRedirection();
             app.UseMvc();
         }
+
+        private void ConfigureJwt(IServiceCollection services)
+        {
+            var jwtSettingsSection = Configuration.GetSection("JwtSettings");
+            services.Configure<JwtSettings>(jwtSettingsSection);
+
+            var jwtSettings = jwtSettingsSection.Get<JwtSettings>();
+            var key = Encoding.UTF8.GetBytes(jwtSettings.Secret);
+
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(options =>
+            {
+                options.RequireHttpsMetadata = false;
+                options.SaveToken = true;
+                options.TokenValidationParameters = new TokenValidationParameters()
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                };
+            });
+        }
+
     }
 }

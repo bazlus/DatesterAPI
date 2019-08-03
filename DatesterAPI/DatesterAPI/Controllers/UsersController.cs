@@ -1,16 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
-
-using System;
-using System.Threading.Tasks;
-
-namespace DatesterAPI.Controllers
+﻿namespace DatesterAPI.Controllers
 {
     using AutoMapper;
     using Datester.Data.Models;
     using Datester.Services;
     using InputModels;
-
-    using Microsoft.AspNetCore.Identity;
+    using Microsoft.AspNetCore.Mvc;
+    using System;
+    using System.Threading.Tasks;
+    using ViewModels;
 
 
     public class UsersController : ApiController
@@ -41,13 +38,13 @@ namespace DatesterAPI.Controllers
         }
 
         [HttpPost]
-        [Route("Login")]
+        [Route("login")]
         public async Task<ActionResult> Login(UserLoginInputModel userLoginInput)
         {
             try
             {
                 var tokenResult = await userService.SignInUser(userLoginInput.Email, userLoginInput.Password);
-                return this.Ok(tokenResult);
+                return this.Ok(new {token = tokenResult});
             }
             catch (InvalidOperationException ex)
             {
@@ -55,6 +52,7 @@ namespace DatesterAPI.Controllers
             }
         }
 
+        [HttpPost]
         [Route("upload-image")]
         public async Task<IActionResult> UploadImage([FromBody] byte[] photo)
         {
@@ -66,6 +64,14 @@ namespace DatesterAPI.Controllers
             }
 
             return this.Ok();
+        }
+
+        [Route("profile")]
+        [HttpGet]
+        public async Task<UserViewModel> GetUser()
+        {
+            var user = await this.userService.GetCurrentUser(this.User);
+            return this.mapper.Map<UserViewModel>(user);
         }
     }
 }

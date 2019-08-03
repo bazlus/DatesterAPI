@@ -9,11 +9,13 @@ namespace Datester.Services
 
     public interface IUserService
     {
-        Task<int> UploadPhotoAsync(byte[] photo, ClaimsPrincipal user);
-
         Task<IdentityResult> RegisterUser(ApplicationUser user, string password);
 
-        Task<string> SignInUser(string email, string password);
+         Task<int> UploadPhotoAsync(byte[] photo, ClaimsPrincipal user);
+
+         Task<string> SignInUser(string email, string password);
+
+         Task<ApplicationUser> GetCurrentUser(ClaimsPrincipal userClaims);
 
     }
-    }
+ }
