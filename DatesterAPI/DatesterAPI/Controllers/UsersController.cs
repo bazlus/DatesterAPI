@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 namespace DatesterAPI.Controllers
 {
     using AutoMapper;
-
+    using Datester.Data.Models;
+    using Datester.Services;
     using InputModels;
 
     using Microsoft.AspNetCore.Identity;
@@ -16,14 +17,12 @@ namespace DatesterAPI.Controllers
     {
         private readonly IUserService userService;
         private readonly IMapper mapper;
-        private readonly IUserService userService;
 
         public UsersController(IUserService userService,
                                 IMapper mapper)
         {
             this.userService = userService;
             this.mapper = mapper;
-            this.userService = userService;
         }
 
         [HttpPost]
@@ -31,7 +30,14 @@ namespace DatesterAPI.Controllers
         public async Task<ActionResult> Register(UserRegistrationInputModel userInputModel)
         {
             ApplicationUser user = mapper.Map<ApplicationUser>(userInputModel);
-            return this.Ok(await this.userService.RegisterUser(user, userInputModel.Password));
+            var result = await this.userService.RegisterUser(user, userInputModel.Password);
+
+            if (result.Succeeded)
+            {
+                return this.Ok(result);
+            }
+
+            return this.BadRequest(result);
         }
 
         [HttpPost]
@@ -40,8 +46,8 @@ namespace DatesterAPI.Controllers
         {
             try
             {
-               var tokenResult = await userService.SignInUser(userLoginInput.Email, userLoginInput.Password);
-               return this.Ok(new {tokenResult});
+                var tokenResult = await userService.SignInUser(userLoginInput.Email, userLoginInput.Password);
+                return this.Ok(tokenResult);
             }
             catch (InvalidOperationException ex)
             {

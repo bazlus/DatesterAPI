@@ -1,22 +1,20 @@
-﻿using System.Text;
-using Datester.Services;
-using DatesterAPI.Configuration;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-
-namespace DatesterAPI
+﻿namespace DatesterAPI
 {
+    using System.Text;
     using AutoMapper;
+    using Configuration;
     using Datester.Data;
     using Datester.Data.Models;
     using Datester.Services;
     using Datester.Services.AutoMapper;
+    using Microsoft.AspNetCore.Authentication.JwtBearer;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.IdentityModel.Tokens;
 
     public class Startup
     {
