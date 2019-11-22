@@ -1,5 +1,6 @@
 ﻿namespace Datester.Data.Models
 {
+    using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
@@ -29,6 +30,8 @@
         public string Hobbies { get; set; }
 
         public ICollection<UsersPhotos> Photos { get; set; }
+
+        public DateTime BirthDate { get; set; }
 
         public ApplicationUser()
         {

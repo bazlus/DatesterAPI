@@ -25,8 +25,7 @@ namespace Datester.Services
         public UserService(UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             DatesterDbContext dbContext,
-            IOptions<JwtSettings> jwtSettings
-            )
+            IOptions<JwtSettings> jwtSettings)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
@@ -61,6 +60,12 @@ namespace Datester.Services
             throw new InvalidOperationException("Invalid email or password");
         }
 
+        public async Task<ApplicationUser> GetCurrentUser(ClaimsPrincipal userClaims)
+        {
+            var result = await userManager.GetUserAsync(userClaims);
+            return result;
+        }
+
         private string GetJwtToken(ApplicationUser user)
         {
             var secret = this.jwtSettings.Value.Secret;
@@ -83,5 +88,6 @@ namespace Datester.Services
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
         }
+
     }
 }

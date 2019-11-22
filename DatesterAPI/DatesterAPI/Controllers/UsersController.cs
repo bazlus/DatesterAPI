@@ -7,6 +7,7 @@
     using Microsoft.AspNetCore.Mvc;
     using System;
     using System.Threading.Tasks;
+    using ViewModels;
 
     public class UsersController : ApiController
     {
@@ -25,17 +26,24 @@
         public async Task<ActionResult> Register(UserRegistrationInputModel userInputModel)
         {
             ApplicationUser user = mapper.Map<ApplicationUser>(userInputModel);
-            return this.Ok(await this.userService.RegisterUser(user, userInputModel.Password));
+            var result = await this.userService.RegisterUser(user, userInputModel.Password);
+
+            if (result.Succeeded)
+            {
+                return this.Ok(result);
+            }
+
+            return this.BadRequest(result);
         }
 
         [HttpPost]
-        [Route("Login")]
+        [Route("login")]
         public async Task<ActionResult> Login(UserLoginInputModel userLoginInput)
         {
             try
             {
-               var tokenResult = await userService.SignInUser(userLoginInput.Email, userLoginInput.Password);
-               return this.Ok(new {tokenResult});
+                var tokenResult = await userService.SignInUser(userLoginInput.Email, userLoginInput.Password);
+                return this.Ok(new {token = tokenResult});
             }
             catch (InvalidOperationException ex)
             {
@@ -43,6 +51,7 @@
             }
         }
 
+        [HttpPost]
         [Route("upload-image")]
         public async Task<IActionResult> UploadImage([FromBody] byte[] photo)
         {
@@ -53,6 +62,14 @@
             }
 
             return this.Ok();
+        }
+
+        [Route("profile")]
+        [HttpGet]
+        public async Task<UserViewModel> GetUser()
+        {
+            var user = await this.userService.GetCurrentUser(this.User);
+            return this.mapper.Map<UserViewModel>(user);
         }
     }
 }
