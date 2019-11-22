@@ -10,9 +10,7 @@
     {
         public DatesterDbContext(DbContextOptions options)
             :base(options)
-        {
-            
-        }
+        { }
 
         public DbSet<Date> Dates { get; set; }
 

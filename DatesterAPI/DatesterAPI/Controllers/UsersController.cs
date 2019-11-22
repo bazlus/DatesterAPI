@@ -8,14 +8,13 @@
     using System;
     using System.Threading.Tasks;
 
-
     public class UsersController : ApiController
     {
         private readonly IUserService userService;
         private readonly IMapper mapper;
 
         public UsersController(IUserService userService,
-                                IMapper mapper)
+                               IMapper mapper)
         {
             this.userService = userService;
             this.mapper = mapper;
@@ -48,7 +47,6 @@
         public async Task<IActionResult> UploadImage([FromBody] byte[] photo)
         {
             var result = await userService.UploadPhotoAsync(photo, this.User);
-
             if (result == 0)
             {
                 return this.BadRequest(new InvalidOperationException("File type must be .jpeg"));

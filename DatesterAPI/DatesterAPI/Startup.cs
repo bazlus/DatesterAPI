@@ -66,11 +66,7 @@ namespace DatesterAPI
             {
                 options.AddDefaultPolicy(opt => opt.WithOrigins("http://localhost:4200").AllowAnyHeader().AllowAnyMethod());
             });
-
-
-
          
-            services.AddCors();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             services.AddDbContext<DatesterDbContext>(options =>

@@ -52,7 +52,6 @@ namespace Datester.Services
         public async Task<string> SignInUser(string email, string password)
         {
             var user = await userManager.FindByEmailAsync(email);
-
             if (user != null && await userManager.CheckPasswordAsync(user, password))
             {
                 var jwtToken = this.GetJwtToken(user);
@@ -60,11 +59,6 @@ namespace Datester.Services
             }
 
             throw new InvalidOperationException("Invalid email or password");
-        }
-
-        public static string GetUsernameFromEmail(string email)
-        {
-            return email.Replace("@", ".").Replace(".", "-");
         }
 
         private string GetJwtToken(ApplicationUser user)
