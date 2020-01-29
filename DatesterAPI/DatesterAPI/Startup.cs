@@ -39,13 +39,15 @@
             IMapper mapper = mappingConfig.CreateMapper();
             services.AddSingleton(mapper);
             services.AddTransient<IUserService, UserService>();
-
+            
             services.AddCors(options =>
             {
-                options.AddDefaultPolicy(opt => opt.WithOrigins("http://localhost:4200").AllowAnyHeader().AllowAnyMethod());
+                options.AddPolicy("CorsPolicy",
+                    builder => builder.AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .AllowCredentials().WithOrigins(Configuration["AppSettings:ClientUrl"]));
             });
-            services.AddCors();
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             services.AddDbContext<DatesterDbContext>(options =>
             {
@@ -61,6 +63,7 @@
                 })
                 .AddEntityFrameworkStores<DatesterDbContext>();
 
+
             services.AddMvc(options => { options.InputFormatters.Insert(0, new BinaryInputFormatter()); }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
@@ -75,9 +78,7 @@
                 app.UseHsts();
             }
 
-            app.UseCors(builder => builder.WithOrigins(Configuration["AppSettings:ClientUrl"])
-                .AllowAnyMethod()
-                .AllowAnyHeader());
+            app.UseCors("CorsPolicy");
 
             app.UseAuthentication();
 
