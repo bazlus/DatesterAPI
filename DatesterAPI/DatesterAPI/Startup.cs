@@ -1,5 +1,6 @@
 ﻿namespace DatesterAPI
 {
+    using System.Net;
     using System.Reflection;
     using System.Text;
     using AutoMapper;
@@ -29,6 +30,8 @@
 
         public void ConfigureServices(IServiceCollection services)
         {
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
+
             ConfigureJwt(services);
 
             var mappingConfig = new MapperConfiguration(mc =>
@@ -39,6 +42,7 @@
             IMapper mapper = mappingConfig.CreateMapper();
             services.AddSingleton(mapper);
             services.AddTransient<IUserService, UserService>();
+            services.AddTransient<ICloudinaryMediaService, CloudinaryMediaService>();
             
             services.AddCors(options =>
             {
@@ -46,7 +50,8 @@
                     builder => builder.AllowAnyOrigin()
                     .AllowAnyMethod()
                     .AllowAnyHeader()
-                    .AllowCredentials().WithOrigins(Configuration["AppSettings:ClientUrl"]));
+                    .AllowCredentials()
+                    .WithOrigins(Configuration["AppSettings:ClientUrl"]));
             });
 
             services.AddDbContext<DatesterDbContext>(options =>
@@ -62,8 +67,7 @@
                     options.Password.RequiredLength = 6;
                 })
                 .AddEntityFrameworkStores<DatesterDbContext>();
-
-
+            
             services.AddMvc(options => { options.InputFormatters.Insert(0, new BinaryInputFormatter()); }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 

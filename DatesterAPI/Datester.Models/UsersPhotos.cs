@@ -12,6 +12,6 @@ namespace Datester.Data.Models
 
         public ApplicationUser User { get; set; }
 
-        public byte[] Photo { get; set; }
+        public string PhotoUrl { get; set; }
     }
 }

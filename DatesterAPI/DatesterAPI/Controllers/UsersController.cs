@@ -64,12 +64,13 @@
             return this.Ok();
         }
 
-        [Route("profile")]
         [HttpGet]
+        [Route("profile")]
         public async Task<UserViewModel> GetUser()
         {
             var user = await this.userService.GetCurrentUser(this.User);
-            return this.mapper.Map<UserViewModel>(user);
+            var userDTO = this.mapper.Map<UserViewModel>(user);
+            return userDTO;
         }
     }
 }

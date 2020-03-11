@@ -1,6 +1,7 @@
 ﻿namespace Datester.Services.AutoMapper
 {
     using System;
+    using System.Linq;
     using Data.Models;
     using DatesterAPI.InputModels;
     using DatesterAPI.ViewModels;
@@ -16,7 +17,8 @@
                 .ForMember(dest => dest.Hobbies, opt => opt.MapFrom(source => string.Join(", ", source.Hobbies)));
 
             CreateMap<ApplicationUser, UserViewModel>()
-                .ForMember(dest => dest.Age, opt => opt.MapFrom(src => GetUserAge(src.BirthDate)));
+                .ForMember(dest => dest.Age, opt => opt.MapFrom(src => GetUserAge(src.BirthDate)))
+                .ForMember(dest => dest.PhotoUrls, opt => opt.MapFrom(src => src.Photos.Select(x => x.PhotoUrl)));
         }
 
         private int GetUserAge(DateTime birthdate)

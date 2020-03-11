@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.Text;
 
+using System.IO;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.Formatters;
+using Microsoft.Net.Http.Headers;
+
 namespace Datester.Services
 {
-    using System.IO;
-    using System.Threading.Tasks;
-    using Microsoft.AspNetCore.Mvc.Formatters;
-    using Microsoft.Net.Http.Headers;
 
     public class BinaryInputFormatter : InputFormatter
     {

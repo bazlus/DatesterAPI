@@ -6,14 +6,15 @@ using DatesterAPI.Configuration;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
+using System.Threading.Tasks;
+using Datester.Data;
+using Datester.Data.Models;
+using Microsoft.AspNetCore.Identity;
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
+
 namespace Datester.Services
 {
-    using System.Security.Claims;
-    using System.Threading.Tasks;
-    using Data;
-    using Data.Models;
-    using Microsoft.AspNetCore.Identity;
-    using Microsoft.AspNetCore.Mvc;
 
     public class UserService : IUserService
     {
@@ -21,24 +22,28 @@ namespace Datester.Services
         private readonly SignInManager<ApplicationUser> signInManager;
         private readonly DatesterDbContext dbContext;
         private readonly IOptions<JwtSettings> jwtSettings;
+        private readonly ICloudinaryMediaService cloudinary;
 
-        public UserService(UserManager<ApplicationUser> userManager,
+        public UserService(
+            UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             DatesterDbContext dbContext,
-            IOptions<JwtSettings> jwtSettings)
+            IOptions<JwtSettings> jwtSettings,
+            ICloudinaryMediaService cloudinary)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
             this.dbContext = dbContext;
             this.jwtSettings = jwtSettings;
-
+            this.cloudinary = cloudinary;
         }
 
 
         public async Task<int> UploadPhotoAsync(byte[] photo, ClaimsPrincipal userClaims)
         {
             var user = await userManager.GetUserAsync(userClaims);
-            user.Photos.Add(new UsersPhotos() {Photo = photo});
+            var photoUrl = await this.cloudinary.UploadPhoto(photo);
+            user.Photos.Add(new UsersPhotos() { PhotoUrl = photoUrl });
             return await dbContext.SaveChangesAsync();
         }
 
@@ -62,8 +67,13 @@ namespace Datester.Services
 
         public async Task<ApplicationUser> GetCurrentUser(ClaimsPrincipal userClaims)
         {
-            var result = await userManager.GetUserAsync(userClaims);
-            return result;
+            var userId = userManager.GetUserId(userClaims);
+            var currentUser = await dbContext.Users
+                .Include(u => u.Photos)
+                .Where(u => u.Id == userId)
+                .FirstOrDefaultAsync();
+               
+            return currentUser;
         }
 
         private string GetJwtToken(ApplicationUser user)
