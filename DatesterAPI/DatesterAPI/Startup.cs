@@ -1,7 +1,6 @@
 ﻿namespace DatesterAPI
 {
     using System.Net;
-    using System.Reflection;
     using System.Text;
     using AutoMapper;
     using Configuration;
@@ -17,7 +16,6 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.IdentityModel.Tokens;
-    using ViewModels;
 
     public class Startup
     {
@@ -68,7 +66,7 @@
                 })
                 .AddEntityFrameworkStores<DatesterDbContext>();
             
-            services.AddMvc(options => { options.InputFormatters.Insert(0, new BinaryInputFormatter()); }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)

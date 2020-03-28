@@ -12,11 +12,12 @@ using Datester.Data.Models;
 using Microsoft.AspNetCore.Identity;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using Datester.Services.Interfaces.DependencyInjection;
 
 namespace Datester.Services
 {
 
-    public class UserService : IUserService
+    public class UserService : IUserService, IService
     {
         private readonly UserManager<ApplicationUser> userManager;
         private readonly SignInManager<ApplicationUser> signInManager;
