@@ -8,6 +8,7 @@
     using Datester.Data.Models;
     using Datester.Services;
     using Datester.Services.AutoMapper;
+    using Datester.Services.ExtentionMethods;
     using Microsoft.AspNetCore.Authentication.JwtBearer;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
@@ -36,12 +37,11 @@
             {
                 mc.AddProfile(new ApplicationMappingsProfile());
             });
-
             IMapper mapper = mappingConfig.CreateMapper();
             services.AddSingleton(mapper);
-            services.AddTransient<IUserService, UserService>();
-            services.AddTransient<ICloudinaryMediaService, CloudinaryMediaService>();
-            
+
+            services.MapConventionalDependencies();
+
             services.AddCors(options =>
             {
                 options.AddPolicy("CorsPolicy",
